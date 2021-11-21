@@ -80,3 +80,6 @@ def process_image():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+# ssh -i model_web_deploy.pem ubuntu@3.21.170.18
+# pip install --no-cache-dir torch torchvision
