@@ -79,7 +79,7 @@ def process_image():
     return send_file(filename, mimetype='image/gif')
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0')
 
-# ssh -i model_web_deploy.pem ubuntu@3.21.170.18
+# ssh -i model_web_deploy.pem ubuntu@18.188.135.111
 # pip install --no-cache-dir torch torchvision
