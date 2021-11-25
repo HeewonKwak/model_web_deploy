@@ -42,8 +42,8 @@ def imshow(img, size=5, cmap='jet'):
     plt.axis('off')
     plt.show()
 
-@app.route("/predict", methods=["POST"])
-def process_image():
+@app.route("/predict1", methods=["POST"])
+def process_image1():
     file = request.files['file']
     img_bytes = file.read()
     save_path = "samples/data/input.jpg"
@@ -57,11 +57,78 @@ def process_image():
 
     model = Generator().eval().to(device)
 
+
     ckpt = torch.load("checkpoint/generator_celeba_distill.pt", map_location=device)
     model.load_state_dict(ckpt)
 
     results = []
+    # backgroundremover -i save_path -o save_path
     image = load_image(save_path, image_size)
+
+    output = model(image.to(device))
+
+    results.append(output.cpu())
+    results = torch.cat(results, 2)
+
+    filename = "samples/data/cat.jpg"
+    cv2.imwrite(filename, cv2.cvtColor(255 * tensor2image(results), cv2.COLOR_BGR2RGB))
+
+    return send_file(filename, mimetype='image/gif')
+
+@app.route("/predict2", methods=["POST"])
+def process_image2():
+    file = request.files['file']
+    img_bytes = file.read()
+    save_path = "samples/data/input.jpg"
+    photo = open(save_path, 'wb')
+    photo.write(img_bytes)
+    photo.close()
+
+    device = 'cpu'
+    torch.set_grad_enabled(False)
+    image_size = 300  # Can be tuned, works best when the face width is between 200~250 px
+
+    model = Generator().eval().to(device)
+
+    ckpt = torch.load("checkpoint/face_paint_512_v0.pt", map_location=device)
+    model.load_state_dict(ckpt)
+
+    results = []
+    # backgroundremover -i save_path -o save_path
+    image = load_image(save_path, image_size)
+
+    output = model(image.to(device))
+
+    results.append(output.cpu())
+    results = torch.cat(results, 2)
+
+    filename = "samples/data/cat.jpg"
+    cv2.imwrite(filename, cv2.cvtColor(255 * tensor2image(results), cv2.COLOR_BGR2RGB))
+
+    return send_file(filename, mimetype='image/gif')
+
+@app.route("/predict3", methods=["POST"])
+def process_image3():
+    file = request.files['file']
+    img_bytes = file.read()
+    save_path = "samples/data/input.jpg"
+    photo = open(save_path, 'wb')
+    photo.write(img_bytes)
+    photo.close()
+
+    device = 'cpu'
+    torch.set_grad_enabled(False)
+    image_size = 300  # Can be tuned, works best when the face width is between 200~250 px
+
+    model = Generator().eval().to(device)
+
+    ckpt = torch.load(f"checkpoint/face_paint_512_v2_0.pt", map_location=device)
+    model.load_state_dict(ckpt)
+
+    results = []
+    # backgroundremover -i save_path -o save_path
+    image = load_image(save_path, image_size)
+
     output = model(image.to(device))
 
     results.append(output.cpu())

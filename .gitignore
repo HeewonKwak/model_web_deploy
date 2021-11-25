@@ -102,12 +102,10 @@ samples/faces
 
 samples/inputs
 
-checkpoint/face_paint_512_v0.pt
-
-checkpoint/generator_celeba_distill.pt
-
 static
 
 templates
 
 model_web_deploy.pem
+
+mension.txt

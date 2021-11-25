@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import torch
 from model import Generator
 
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, send_file
 
 
 app = Flask(__name__)
@@ -51,19 +51,13 @@ def process_image():
     photo.write(img_bytes)
     photo.close()
 
-    # img_bytes = file.read()
-    # jpg_arr = np.frombuffer(img_bytes, dtype=np.uint8)
-    # img = cv2.imdecode(jpg_arr, cv2.IMREAD_COLOR)
-
     device = 'cpu'
     torch.set_grad_enabled(False)
     image_size = 300  # Can be tuned, works best when the face width is between 200~250 px
 
     model = Generator().eval().to(device)
 
-    # ckpt = torch.load("checkpoint/generator_celeba_distill.pt", map_location=device)
     ckpt = torch.load("checkpoint/face_paint_512_v0.pt", map_location=device)
-    # ckpt = torch.load(f"checkpoint/face_paint_512_v2_0.pt", map_location=device)
     model.load_state_dict(ckpt)
 
     results = []
@@ -80,6 +74,3 @@ def process_image():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
-
-# ssh -i model_web_deploy.pem ubuntu@3.16.37.62
-# pip install --no-cache-dir torch torchvision
